@@ -2,10 +2,17 @@
 
 # sign up for a nexmo account
 import nexmo
-client = nexmo.Client(key='xxxxxxx', secret='xxxxxxxx')
+client = nexmo.Client(key='xxxxxx', secret='xxxxxx')
 
-client.send_message({
-    'from': 'xxxxxxxxxx',
-    'to': 'xxxxxxxxxx',
-    'text': 'Hello from Nestwatch!',
-})
+responseData = client.send_message(
+    {
+        'from': 'xxxxxx',
+        'to': 'xxxxxx',
+        'text': 'Hello from Nestwatch!',
+    }
+)
+
+if responseData["messages"][0]["status"] == "0":
+    print("Message sent successfully.")
+else:
+    print(f"Message failed with error: {responseData['messages'][0]['error-text']}")
