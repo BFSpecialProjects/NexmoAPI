@@ -1,5 +1,6 @@
 # parser, updated for Nexmo integration
-# TODO: "interpret" lemmatized words and form response messages
+# TODO: How does correlation function handle misspellings?
+# TODO: How will we handle misspellings?
 
 # import NLP libraries
 import nltk
@@ -58,21 +59,35 @@ def identify_threat(tr):
     # else return error to user
     for w in tr:
         try:
+            flag = 0
+
+            # TODO: instead of multiple if's, change to dictionary with keywords
             if (model.similarity(w, 'gun') > .4):
-                print ('True')
+                print ('Threat has been reported.')
+                flag = 1
                 break
             elif (model.similarity(w, 'fire') > .4):
-                print ('True')
+                print ('Threat has been reported.')
+                flag = 1
                 break
-            else:
-                print ('False')
+            elif (model.similarity(w, 'knife') > .4):
+                print('Threat has been reported.')
+                flag = 1
+                break
         except:
-            # instead of trying to process a contraction (which returns and eror)
+            # handles words with an apostrophe
+            # instead of trying to process a contraction (which returns an eror)
             # just pass over apostrophe
             pass
+
+            # if no valid threat has been found, return error to user
+            if (flag == 0):
+                print('Error. Invalid threat. Your threat was not reported.')
     return
 
 # test calls
 parse_report("There is a student with a gun")
 parse_report("active shooter")
 parse_report("There's a fire")
+parse_report("Student wielding knife")
+parse_report("Student with a baseball")
